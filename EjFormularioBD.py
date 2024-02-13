@@ -33,11 +33,9 @@ def get_mail():
 
         if name in mails:
             email = mails[name]
-            return render_template('getmailresultado.html', result=f'Correo de {name}: {email}')
-        else:
-            return render_template('getmailresultado.html', result=f'Nombre no encontrado: {name}')
-
-    return render_template('getmailformulario.html')
+            name = name.capitalize()
+            return render_template('resultgetmail.html', result=f'Correo de {name}: {email}')
+    return render_template('formgetmail.html')
 
 @app.route('/addmail', methods=['GET', 'POST'])
 def add_mail():
@@ -54,9 +52,9 @@ def add_mail():
         result = mycursor.fetchall()
         mails.update({row[1]: row[2] for row in result})
 
-        return render_template('addmailresultado.html', result=f'Se ha añadido correctamente: {name} - {email}')
+        return render_template('resultaddmail.html', result=f'Se ha añadido correctamente: {name} - {email}')
 
-    return render_template('addmail.html')
+    return render_template('formaddmail.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
