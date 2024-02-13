@@ -17,10 +17,10 @@
     crossorigin="anonymous"></script>
     <div class="container">
       <h1 id="titulo"> SERVEI CONSULTA MAIL</h1>
-      {% if correu == "NOTROBAT" %}
-        <h2>El nom <b>{{ name }}</b> no se ha encontrado en nuestros datos.</h2>
+      {% if email == "Correo no encontrado" %}
+        <h2>El Correo para <b>{{ name }}</b> no se ha encontrado en nuestros datos.</h2>
       {% else %}
-        <h2>El correo para <b>{{ name }}</b> es: <b>{{ email }}</b></h2>
+        <h2>El Correo para <b>{{ name }}</b> es: <b>{{ email }}</b></h2>
       {% endif %}
       <h4 class="text-enlace">
         Puedes hacer una nueva consulta en el enlace <a href="{{url_for('get_mail')}}">GETMAIL</a>,

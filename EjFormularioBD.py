@@ -26,35 +26,53 @@ mails = {row[1]: row[2] for row in result}
 def inici():
     return redirect(url_for('get_mail'))
 
-@app.route('/getmail', methods=['GET', 'POST'])
+@app.route('/getmail',methods = ['POST', 'GET'])
 def get_mail():
     if request.method == 'POST':
-        name = request.form['name']
+        name = request.form['nom']
+        name = name.capitalize()
 
-        if name in mails:
-            email = mails[name]
-            name = name.capitalize()
-            return render_template('resultgetmail.html', result=f'Correo de {name}: {email}')
-    return render_template('formgetmail.html')
+        # Buscar el correo asociado al nombre en la base de datos
+        mycursor.execute("SELECT correo FROM ALUMNOS WHERE nombre = %s", (name,))
+        result = mycursor.fetchone()
+
+        if result:
+            email = result[0]
+            return render_template('resultgetmail.html', name=name, email=email)
+        else:  
+            return render_template('resultgetmail.html', name=name, email="Correo no encontrado")
+    else: 
+        return render_template('formgetmail.html')
 
 @app.route('/addmail', methods=['GET', 'POST'])
 def add_mail():
     if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
+        modif = False
+        name = request.form['nom']
+        name = name.capitalize()
+        email = request.form['correu']
 
-        # Agrega el nuevo alumno a la base de datos
-        mycursor.execute("INSERT INTO ALUMNOS (nombre, correo) VALUES (%s, %s)", (name, email))
-        mydb.commit()
+        if 'modif' in request.form:
+            modif = True
 
-        # Actualiza el diccionario con los nuevos datos de la base de datos
-        mycursor.execute("SELECT * FROM ALUMNOS")
-        result = mycursor.fetchall()
-        mails.update({row[1]: row[2] for row in result})
+        # Verificar si el nombre ya existe en la base de datos
+        mycursor.execute("SELECT * FROM ALUMNOS WHERE nombre = %s", (name,))
+        existing_record = mycursor.fetchone()
 
-        return render_template('resultaddmail.html', result=f'Se ha añadido correctamente: {name} - {email}')
+        if existing_record:
+            # Modificar el correo si ya existe
+            mycursor.execute("UPDATE ALUMNOS SET correo = %s WHERE nombre = %s", (email, name))
+        else:
+            # Insertar un nuevo registro si no existe
+            mycursor.execute("INSERT INTO ALUMNOS (nombre, correo) VALUES (%s, %s)", (name, email))
 
-    return render_template('formaddmail.html')
+        mydb.commit()  # Guardar los cambios en la base de datos
+
+        result_msg = "Correo añadido/modificado correctamente"
+
+        return render_template('resultaddmail.html', name=name, email=email, result_msg=result_msg)
+    else:
+        return render_template('formaddmail.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

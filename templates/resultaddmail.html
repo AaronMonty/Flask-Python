@@ -18,11 +18,11 @@
     <div class="container">
       <h1 id="titulo"> SERVEI ACTUALITZACIÓ MAIL</h1>
       {% if result_msg == "JAEXISTEIX" %}
-        <h2>El correo para el nombre <b>{{ nom }}</b> ya estaba en nuestros datos.</h2>
+        <h2>El correo para el nombre <b>{{ name }}</b> ya estaba en nuestros datos.</h2>
       {% elif result_msg == "MODIFICAT" %}
-        <h2>El correo para el nombre <b>{{ nom }}</b> ya estaba y ha sido modificado a: <b>{{ correu }}</b></h2>
+        <h2>El correo para el nombre <b>{{ name }}</b> ya estaba y ha sido modificado a: <b>{{ email }}</b></h2>
       {% else %}
-        <h2>El correo para el nombre <b>{{ nom }}</b> ha sido añadido como: <b>{{ correu }}</b></h2>
+        <h2>El correo para el nombre <b>{{ name }}</b> ha sido añadido como: <b>{{ email }}</b></h2>
       {% endif %}
       <h4 class="text_enlace">
         Puedes añadir más correos en el enlace <a href="{{url_for('add_mail')}}">ADDMAIL</a>,
