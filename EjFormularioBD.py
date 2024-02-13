@@ -60,15 +60,16 @@ def add_mail():
         existing_record = mycursor.fetchone()
 
         if existing_record:
-            # Modificar el correo si ya existe
-            mycursor.execute("UPDATE ALUMNOS SET correo = %s WHERE nombre = %s", (email, name))
-        else:
+           # Mostrar un mensaje si el correo ya existe
+            result_msg = f"JAEXISTEIX"
+        elif existing_record==False:
             # Insertar un nuevo registro si no existe
             mycursor.execute("INSERT INTO ALUMNOS (nombre, correo) VALUES (%s, %s)", (name, email))
+            result_msg=""
+        else:
+            result_msg = "MODIFICAT"
 
         mydb.commit()  # Guardar los cambios en la base de datos
-
-        result_msg = "Correo añadido/modificado correctamente"
 
         return render_template('resultaddmail.html', name=name, email=email, result_msg=result_msg)
     else:
