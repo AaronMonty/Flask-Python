@@ -6,8 +6,8 @@ app = Flask(__name__)
 # Conéctate a la base de datos
 mydb = mysql.connector.connect(
     host="localhost",
-    user="root",
-    password="",
+    user="aaron",
+    password="1234",
     database="mydatabase"
 )
 
@@ -62,7 +62,7 @@ def add_mail():
         if existing_record:
            # Mostrar un mensaje si el correo ya existe
             result_msg = f"JAEXISTEIX"
-        elif existing_record==False:
+        elif existing_record!=False:
             # Insertar un nuevo registro si no existe
             mycursor.execute("INSERT INTO ALUMNOS (nombre, correo) VALUES (%s, %s)", (name, email))
             result_msg=""
@@ -70,7 +70,7 @@ def add_mail():
             result_msg = "MODIFICAT"
 
         mydb.commit()  # Guardar los cambios en la base de datos
-
+        print(result_msg)
         return render_template('resultaddmail.html', name=name, email=email, result_msg=result_msg)
     else:
         return render_template('formaddmail.html')
